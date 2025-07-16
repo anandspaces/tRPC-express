@@ -1,11 +1,11 @@
 // src/router.ts
 import { initTRPC, TRPCError } from '@trpc/server';
 import { z } from 'zod';
-import { Context } from './context';
+import { Context, ContextType } from './context';
 import { observable } from '@trpc/server/observable';
 import { EventEmitter } from 'events';
 
-const t = initTRPC.context<Context>().create();
+const t = initTRPC.context<ContextType>().create();
 
 // Event emitter for real-time updates
 const ee = new EventEmitter();
@@ -15,7 +15,7 @@ interface User {
   id: string;
   name: string;
   email: string;
-  createdAt: Date;
+  createdAt: string; // Changed from Date to string for frontend compatibility
 }
 
 interface Post {
@@ -23,17 +23,17 @@ interface Post {
   title: string;
   content: string;
   authorId: string;
-  createdAt: Date;
+  createdAt: string; // Changed from Date to string for frontend compatibility
 }
 
 let users: User[] = [
-  { id: '1', name: 'John Doe', email: 'john@example.com', createdAt: new Date() },
-  { id: '2', name: 'Jane Smith', email: 'jane@example.com', createdAt: new Date() },
+  { id: '1', name: 'John Doe', email: 'john@example.com', createdAt: new Date().toISOString() },
+  { id: '2', name: 'Jane Smith', email: 'jane@example.com', createdAt: new Date().toISOString() },
 ];
 
 let posts: Post[] = [
-  { id: '1', title: 'Hello World', content: 'This is my first post!', authorId: '1', createdAt: new Date() },
-  { id: '2', title: 'tRPC is Amazing', content: 'End-to-end type safety is incredible!', authorId: '2', createdAt: new Date() },
+  { id: '1', title: 'Hello World', content: 'This is my first post!', authorId: '1', createdAt: new Date().toISOString() },
+  { id: '2', title: 'tRPC is Amazing', content: 'End-to-end type safety is incredible!', authorId: '2', createdAt: new Date().toISOString() },
 ];
 
 // Middleware
@@ -79,7 +79,7 @@ const userRouter = t.router({
         id: (users.length + 1).toString(),
         name: input.name,
         email: input.email,
-        createdAt: new Date(),
+        createdAt: new Date().toISOString(),
       };
       
       users.push(newUser);
@@ -161,7 +161,7 @@ const postRouter = t.router({
         title: input.title,
         content: input.content,
         authorId: ctx.userId!,
-        createdAt: new Date(),
+        createdAt: new Date().toISOString(),
       };
       
       posts.push(newPost);
@@ -268,4 +268,5 @@ export const appRouter = t.router({
   }),
 });
 
+// Export type definition of API
 export type AppRouter = typeof appRouter;
