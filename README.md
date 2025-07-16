@@ -1,32 +1,30 @@
-# tRPC Express with Next.js
+# tRPC Express Demo
 
-This is a full-stack TypeScript project that demonstrates how to use tRPC with Express.js backend and Next.js frontend.
+A demo application showcasing tRPC with Express backend and Next.js frontend.
 
 ## Features
 
-- End-to-end type safety with tRPC
-- Express.js backend with tRPC API endpoints
-- Next.js frontend with tRPC client integration
-- Real-time updates with WebSocket subscriptions
+- Full-stack TypeScript application with end-to-end type safety
+- Express.js backend with tRPC API
+- Next.js frontend with tRPC client
+- Real-time updates with WebSockets
 - CRUD operations for users and posts
-- Authentication middleware
 
 ## Project Structure
 
-- `backend/`: Express.js server with tRPC
-- `frontend/`: Next.js application with tRPC client
+- `/backend`: Express.js backend with tRPC API
+- `/frontend`: Next.js frontend with tRPC client
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js (v16 or later)
-- npm or yarn
+- Node.js 18+ and npm
 
 ### Installation
 
 1. Clone the repository
-2. Install dependencies for both backend and frontend:
+2. Install dependencies:
 
 ```bash
 # Install backend dependencies
@@ -38,30 +36,42 @@ cd ../frontend
 npm install
 ```
 
-### Running the Development Servers
+### Running the Application
 
 1. Start the backend server:
 
 ```bash
 cd backend
-npx tsx src/index.ts
+npm run dev
 ```
 
-2. Start the frontend development server:
+2. In a separate terminal, start the frontend:
 
 ```bash
 cd frontend
 npm run dev
 ```
 
-3. Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
+3. Open your browser and navigate to [http://localhost:3000](http://localhost:3000)
 
 ## API Endpoints
 
-- REST: `http://localhost:3001/health` - Health check endpoint
-- tRPC: `http://localhost:3001/trpc` - tRPC API endpoint
-- WebSocket: `ws://localhost:3002` - WebSocket endpoint for subscriptions
+- REST API: `http://localhost:3001`
+- tRPC API: `http://localhost:3001/trpc`
+- WebSocket: `ws://localhost:3002`
 
-## License
+## Development
 
-MIT
+The application uses:
+
+- Backend:
+  - Express.js
+  - tRPC v10
+  - WebSockets for real-time updates
+  - In-memory data store (for demo purposes)
+
+- Frontend:
+  - Next.js
+  - tRPC client
+  - React Query for data fetching
+  - Tailwind CSS for styling
