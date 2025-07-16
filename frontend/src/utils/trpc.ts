@@ -1,11 +1,9 @@
 // utils/trpc.ts
-import { createTRPCReact } from '@trpc/react-query';
-import { httpBatchLink } from '@trpc/client';
-import { createWSClient, wsLink } from '@trpc/client';
-import { splitLink } from '@trpc/client';
+import { createTRPCReact, httpBatchLink, splitLink, wsLink, createWSClient } from '@trpc/react-query';
+import { inferRouterInputs, inferRouterOutputs } from '@trpc/server';
 
-// Define a simplified AppRouter type
-type AppRouter = any;
+// Import the AppRouter type from the backend
+import type { AppRouter } from '../../../backend/src/router';
 
 function getBaseUrl() {
   if (typeof window !== 'undefined') return '';
@@ -50,5 +48,5 @@ export const createTrpcClient = () => {
 };
 
 // Export types for convenience
-export type RouterInputs = any;
-export type RouterOutputs = any;
+export type RouterInputs = inferRouterInputs<AppRouter>;
+export type RouterOutputs = inferRouterOutputs<AppRouter>;

@@ -7,7 +7,7 @@ interface User {
   id: string;
   name: string;
   email: string;
-  createdAt: Date;
+  createdAt: string; // Changed from Date to string to match backend
 }
 
 interface Post {
@@ -15,7 +15,7 @@ interface Post {
   title: string;
   content: string;
   authorId: string;
-  createdAt: Date;
+  createdAt: string; // Changed from Date to string to match backend
   author?: User;
 }
 
@@ -70,16 +70,22 @@ export default function Home() {
 
   // Subscriptions for real-time updates
   trpc.onUserChange.useSubscription(undefined, {
-    onData: (data: UserChangeData) => {
+    onData: (data) => {
       console.log('User changed:', data);
       refetchUsers();
+    },
+    onError: (err) => {
+      console.error('Error in user subscription:', err);
     },
   });
 
   trpc.onPostChange.useSubscription(undefined, {
-    onData: (data: PostChangeData) => {
+    onData: (data) => {
       console.log('Post changed:', data);
       refetchPosts();
+    },
+    onError: (err) => {
+      console.error('Error in post subscription:', err);
     },
   });
 
@@ -107,6 +113,10 @@ export default function Home() {
       createPost.mutate(newPost);
     }
   };
+
+  // Replace isLoading with status check in the UI
+  const isUserCreating = createUser.status === 'pending';
+  const isPostCreating = createPost.status === 'pending';
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -169,10 +179,10 @@ export default function Home() {
                 </div>
                 <button
                   type="submit"
-                  disabled={createUser.isLoading}
+                  disabled={isUserCreating}
                   className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {createUser.isLoading ? 'Creating...' : 'Create User'}
+                  {isUserCreating ? 'Creating...' : 'Create User'}
                 </button>
               </form>
             </div>
@@ -270,10 +280,10 @@ export default function Home() {
                 </div>
                 <button
                   type="submit"
-                  disabled={createPost.isLoading}
+                  disabled={isPostCreating}
                   className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {createPost.isLoading ? 'Creating...' : 'Create Post'}
+                  {isPostCreating ? 'Creating...' : 'Create Post'}
                 </button>
               </form>
             </div>
