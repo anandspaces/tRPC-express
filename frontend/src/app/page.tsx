@@ -114,9 +114,10 @@ export default function Home() {
     }
   };
 
-  // Replace isLoading with status check in the UI
-  const isUserCreating = createUser.status === 'pending';
-  const isPostCreating = createPost.status === 'pending';
+  // For tRPC v10 with React Query v4, we need to check if the mutation is loading
+  // We can't directly access isLoading or status, so we'll check if it's not idle
+  const isUserCreating = createUser.status !== 'idle';
+  const isPostCreating = createPost.status !== 'idle';
 
   return (
     <div className="min-h-screen bg-gray-50">
