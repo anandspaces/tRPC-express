@@ -4,7 +4,8 @@
   "scripts": {
     "dev": "tsx src/index.ts",
     "start": "node dist/index.js",
-    "build": "tsc"
+    "build": "tsc",
+    "test-client": "tsx src/test-client.ts"
   },
   "dependencies": {
     "@trpc/client": "^10.45.2",
