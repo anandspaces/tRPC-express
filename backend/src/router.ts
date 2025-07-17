@@ -7,6 +7,26 @@ import { EventEmitter } from 'events';
 
 const t = initTRPC.context<ContextType>().create();
 
+// Logging middleware
+const loggerMiddleware = t.middleware(async ({ path, type, next, input, ctx }) => {
+  const start = Date.now();
+  console.log(`[${new Date().toISOString()}] => Executing ${type} procedure: ${path}`);
+  console.log(`Input: ${JSON.stringify(input)}`);
+  console.log(`Context: userId=${ctx.userId}`);
+
+  const result = await next();
+
+  const durationMs = Date.now() - start;
+  if (result.ok) {
+    console.log(`[${new Date().toISOString()}] <= Completed ${type} procedure: ${path} in ${durationMs}ms`);
+  } else {
+    console.error(`[${new Date().toISOString()}] <= Failed ${type} procedure: ${path} in ${durationMs}ms`);
+    console.error(`Error: ${result.error.message}`);
+  }
+
+  return result;
+});
+
 // Event emitter for real-time updates
 const ee = new EventEmitter();
 
@@ -50,8 +70,8 @@ const isAuthenticated = t.middleware(({ ctx, next }) => {
 });
 
 // Procedures
-const publicProcedure = t.procedure;
-const protectedProcedure = t.procedure.use(isAuthenticated);
+const publicProcedure = t.procedure.use(loggerMiddleware);
+const protectedProcedure = t.procedure.use(isAuthenticated).use(loggerMiddleware);
 
 // User router
 const userRouter = t.router({
@@ -221,6 +241,15 @@ const postRouter = t.router({
 
 // Main app router
 export const appRouter = t.router({
+  _index: publicProcedure
+    .query(() => {
+      return {
+        message: 'tRPC API Server',
+        routes: ['hello', 'users', 'posts'],
+        documentation: 'Visit the root URL for API documentation'
+      };
+    }),
+
   hello: publicProcedure
     .input(z.object({ name: z.string() }))
     .query(({ input }) => {
